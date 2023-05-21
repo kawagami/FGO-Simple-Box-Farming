@@ -1,3 +1,4 @@
+import saber
 import motion_red
 import money
 import fgo
@@ -5,8 +6,11 @@ import fgo
 # 特斯拉+沙狐
 # obj = motion_red.main()
 
+# 劍傻3T
+obj = saber.main()
+
 # QP 關
-obj = money.main()
+# obj = money.main()
 
 # 預設動作 一般仇凜
 # obj = fgo.actions()

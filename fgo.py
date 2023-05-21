@@ -80,8 +80,8 @@ class actions:
 
                 action.apple_count += 1
                 print(f"吃了 {action.apple_count} 次蘋果")
-            else:
-                action.waiting_for(images.in_friend)
+
+            action.waiting_for(images.in_friend)
 
             while True:
                 # 要替換的地方 1
@@ -144,7 +144,7 @@ class actions:
                 # return False
 
     # 點擊 input 的圖片的中心
-    def click_center(image_path, second=1.0, input_confidence=0.999) -> bool:
+    def click_center(image_path, second=0.0, input_confidence=0.999) -> bool:
         target = pyautogui.locateOnScreen(image_path, second, confidence=input_confidence)
         if target:
             center = pyautogui.center(target)
@@ -185,6 +185,7 @@ class actions:
         elif actions.click_center(self.friend_2, input_confidence=0.95):
             return True
         else:
+            # print(f"no {self.friend_1} & {self.friend_2}")
             actions.drag_some_distance_from(1040, 778)
             time.sleep(0.5)
             return False
