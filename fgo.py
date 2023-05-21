@@ -60,9 +60,6 @@ class actions:
     in_battle_check_img = images.in_battle
     friend_1 = images.friend_caster_saber
     friend_2 = images.friend_caster_saber_2
-    
-    # def __init__(self):
-    #     self.loop()
 
     def loop(self, limit = sys.maxsize):
         action = actions
@@ -72,7 +69,7 @@ class actions:
         while True:
             action.continue_start = datetime.datetime.now()
 
-            action.click_center(images.continue_battle)
+            action.must_click_center(images.continue_battle)
             time.sleep(0.5)
 
             if action.on_screen(images.gold_apple):
@@ -90,17 +87,17 @@ class actions:
                 # 要替換的地方 1
                 if self.friend():
                     break
-                time.sleep(1)
+                time.sleep(0.5)
 
             # 要替換的地方 2
             self.in_battle_check()
-            time.sleep(2)
+            time.sleep(1)
 
             # 要替換的地方 3
             self.start_battle()
 
             action.waiting_for(images.continue_battle)
-            time.sleep(4)
+            # time.sleep(4)
 
             action.continue_end = datetime.datetime.now()
 
@@ -116,124 +113,35 @@ class actions:
             print(f"總共花費時間 {action.total_battle_time}")
 
             action.battle_count += 1
-
             print(f"戰鬥了 {action.battle_count} 次")
+
+            average = action.total_battle_time/action.battle_count
+            print(f"平均一輪時間 {average}")
 
             if action.battle_count >= action.battile_limit:
                 print(f"刷了指定的次數 : {action.battile_limit}")
                 break
 
-    def fire_loop(limit = sys.maxsize):
-        action = actions
-
-        action.battile_limit = limit
-
+    # 點擊 input 的圖片的中心
+    def must_click_center(image_path, second=1.0, input_confidence=0.999) -> bool:
         while True:
-            action.continue_start = datetime.datetime.now()
+            target = pyautogui.locateOnScreen(image_path, second, confidence=input_confidence)
+            if target:
+                # 點擊 停止 紀錄的動作
+                pyautogui.click(1501, 38)
 
-            action.click_center(images.continue_battle)
-            time.sleep(0.5)
+                center = pyautogui.center(target)
+                pyautogui.click(center)
+                time.sleep(0.5)
+                # print(f"點擊了 {image_path} 中心")
 
-            if action.on_screen(images.gold_apple):
-                action.waiting_for(images.gold_apple)
-                action.click_center(images.gold_apple)
-                action.waiting_for(images.gold_apple_confirm)
-                action.click_center(images.gold_apple_confirm)
-
-                action.apple_count += 1
-                print(f"吃了 {action.apple_count} 次蘋果")
+                # return True
             else:
-                action.waiting_for(images.in_friend)
+                return True
+                # time.sleep(0.5)
+                # print(f"沒找到圖 {image_path}")
 
-            while True:
-                if action.friend():
-                    break
-                time.sleep(1)
-
-            action.waiting_for(images.in_battle)
-            time.sleep(2)
-
-            action.start_battle()
-
-            action.waiting_for(images.continue_battle)
-            time.sleep(4)
-
-            action.continue_end = datetime.datetime.now()
-
-            result = action.continue_end - action.continue_start
-
-            print(f"這輪花費時間 {result}")
-
-            if action.total_battle_time == 0:
-                action.total_battle_time = result
-            else:
-                action.total_battle_time += result
-
-            print(f"總共花費時間 {action.total_battle_time}")
-
-            action.battle_count += 1
-
-            print(f"戰鬥了 {action.battle_count} 次")
-
-            if action.battle_count >= action.battile_limit:
-                print(f"刷了指定的次數 : {action.battile_limit}")
-                break
-
-    def money_loop(limit = sys.maxsize):
-        action = actions
-
-        action.battile_limit = limit
-
-        while True:
-            action.continue_start = datetime.datetime.now()
-
-            action.click_center(images.continue_battle)
-            time.sleep(0.5)
-
-            if action.on_screen(images.gold_apple):
-                action.waiting_for(images.gold_apple)
-                action.click_center(images.gold_apple)
-                action.waiting_for(images.gold_apple_confirm)
-                action.click_center(images.gold_apple_confirm)
-
-                action.apple_count += 1
-                print(f"吃了 {action.apple_count} 次蘋果")
-            else:
-                action.waiting_for(images.in_friend)
-
-            while True:
-                if action.friend_money():
-                    break
-                time.sleep(1)
-
-            action.waiting_for(images.in_battle)
-            time.sleep(2)
-
-            action.start_battle_money()
-
-            action.waiting_for(images.continue_battle)
-            time.sleep(4)
-
-            action.continue_end = datetime.datetime.now()
-
-            result = action.continue_end - action.continue_start
-
-            print(f"這輪花費時間 {result}")
-
-            if action.total_battle_time == 0:
-                action.total_battle_time = result
-            else:
-                action.total_battle_time += result
-
-            print(f"總共花費時間 {action.total_battle_time}")
-
-            action.battle_count += 1
-
-            print(f"戰鬥了 {action.battle_count} 次")
-
-            if action.battle_count >= action.battile_limit:
-                print(f"刷了指定的次數 : {action.battile_limit}")
-                break
+                # return False
 
     # 點擊 input 的圖片的中心
     def click_center(image_path, second=1.0, input_confidence=0.999) -> bool:
@@ -241,18 +149,18 @@ class actions:
         if target:
             center = pyautogui.center(target)
             pyautogui.click(center)
-            print(f"點擊了 {image_path} 中心")
+            # print(f"點擊了 {image_path} 中心")
 
             return True
         else:
-            print(f"沒找到圖 {image_path}")
+            # print(f"沒找到圖 {image_path}")
 
             return False
 
     def waiting_for(image_path):
         while True:
             if pyautogui.locateOnScreen(image_path):
-                print(f"發現 {image_path}")
+                # print(f"發現 {image_path}")
                 break
             else:
                 # print(f"待機 1s {image_path}")
@@ -260,8 +168,11 @@ class actions:
 
     def in_battle_check(self):
         while True:
-            if pyautogui.locateOnScreen(self.in_battle_check_img):
-                print(f"發現 {self.in_battle_check_img}")
+            target = pyautogui.locateOnScreen(self.in_battle_check_img)
+            if target:
+                center = pyautogui.center(target)
+                pyautogui.click(center)
+                # print(f"發現 {self.in_battle_check_img}")
                 break
             else:
                 # print(f"待機 1s {self.in_battle_check_img}")
@@ -278,28 +189,10 @@ class actions:
             time.sleep(0.5)
             return False
 
-    # 15% 羈絆術傻
-    def friend_money() -> bool:
-        if actions.click_center(images.friend_caster_saber_money_1, input_confidence=0.95):
-            return True
-        elif actions.click_center(images.friend_caster_saber_2, input_confidence=0.95):
-            return True
-        elif actions.click_center(images.friend_caster_saber, input_confidence=0.95):
-            return True
-        else:
-            actions.drag_some_distance_from(1040, 778)
-            time.sleep(0.5)
-            return False
-
     # 啟動錄好的動作
     def start_battle(self):
         pyautogui.hotkey('ctrl', 'alt', '1')
-        print("開始 一般仇凜")
-
-    # 啟動錄好的動作
-    def start_battle_money():
-        pyautogui.hotkey('ctrl', 'alt', '2')
-        print("開始 QP 極 小文西")
+        # print("開始 一般仇凜")
 
     def on_screen(image_path):
         if pyautogui.locateOnScreen(image_path):
@@ -318,15 +211,4 @@ class actions:
         
         # 花費 1s 往下拉
         pyautogui.dragRel(0, -400, 1)
-        print("拖曳一段距離")
-
-    # 點擊 input 圖片的中心後開始記錄的動作
-    def click_center_and_start_battle_after_find_image(image_path, second=1, input_confidence=0.999):
-        target = pyautogui.locateOnScreen(image_path, second, confidence=input_confidence)
-        if target:
-            center = pyautogui.center(target)
-            pyautogui.click(center)
-            print(f"點擊了 {image_path} 中心")
-            actions.start_battle()
-        else:
-            print("沒找到圖")
+        # print("拖曳一段距離")
