@@ -128,7 +128,8 @@ class actions:
             target = pyautogui.locateOnScreen(image_path, second, confidence=input_confidence)
             if target:
                 # 點擊 停止 紀錄的動作
-                pyautogui.click(1501, 38)
+                pyautogui.click(1503, 36)
+                time.sleep(0.1)
 
                 center = pyautogui.center(target)
                 pyautogui.click(center)
